@@ -1,0 +1,92 @@
+javascript
+// Создаем класс "Абонент" для хранения информации о знакомых
+class Abonent {
+  constructor(firstName, lastName, phoneNumbers) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.phoneNumbers = phoneNumbers;
+  }
+}
+
+// Создаем класс "Телефонный справочник"
+class PhoneBook {
+  constructor() {
+    this.abonents = [];
+  }
+
+  // Добавление абонента в справочник
+  addAbonent(abonent) {
+    this.abonents.push(abonent);
+    // Сортируем записи в алфавитном порядке
+    this.abonents.sort((a, b) => {
+      if (a.lastName === b.lastName) {
+        // В случае совпадения фамилий сортируем по номерам телефонов
+        return a.phoneNumbers[0] - b.phoneNumbers[0];
+      } else {
+        return a.lastName.localeCompare(b.lastName);
+      }
+    });
+  }
+
+  // Удаление абонента из справочника
+  removeAbonent(abonent) {
+    const index = this.abonents.findIndex(item => item === abonent);
+    if (index !== -1) {
+      this.abonents.splice(index, 1);
+    }
+  }
+
+  // Редактирование абонента
+  editAbonent(abonent, firstName, lastName, phoneNumbers) {
+    abonent.firstName = firstName;
+    abonent.lastName = lastName;
+    abonent.phoneNumbers = phoneNumbers;
+    // После редактирования проводим сортировку
+    this.abonents.sort((a, b) => {
+      if (a.lastName === b.lastName) {
+        return a.phoneNumbers[0] - b.phoneNumbers[0];
+      } else {
+        return a.lastName.localeCompare(b.lastName);
+      }
+    });
+  }
+
+  // Поиск абонента по фамилии
+  searchByLastName(lastName) {
+    return this.abonents.filter(abonent => abonent.lastName === lastName);
+  }
+
+  // Поиск абонента по номеру телефона
+  searchByPhoneNumber(phoneNumber) {
+    return this.abonents.filter(abonent => abonent.phoneNumbers.includes(phoneNumber));
+  }
+}
+
+// Пример использования
+const phoneBook = new PhoneBook();
+
+// Создание абонентов
+const abonent1 = new Abonent('Иван', 'Иванов', ['111-111-1111', '222-222-2222', '333-333-3333']);
+const abonent2 = new Abonent('Петр', 'Петров', ['444-444-4444']);
+const abonent3 = new Abonent('Сергей', 'Сергеев', ['555-555-5555', '666-666-6666']);
+
+// Добавление абонентов в справочник
+phoneBook.addAbonent(abonent1);
+phoneBook.addAbonent(abonent2);
+phoneBook.addAbonent(abonent3);
+
+// Поиск абонента по фамилии
+const searchedByLastName = phoneBook.searchByLastName('Петров');
+console.log('Поиск по фамилии:', searchedByLastName);
+
+// Поиск абонента по номеру телефона
+const searchedByPhoneNumber = phoneBook.searchByPhoneNumber('555-555-5555');
+console.log('Поиск по номеру телефона:', searchedByPhoneNumber);
+
+// Редактирование абонента
+phoneBook.editAbonent(abonent2, 'Николай', 'Николаев', ['777-777-7777']);
+console.log('Редактирование абонента:', phoneBook.abonents);
+
+// Удаление абонента
+phoneBook.removeAbonent(abonent1);
+console.log('Удаление абонента:', phoneBook.abonents);
